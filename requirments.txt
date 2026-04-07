@@ -1,5 +1,6 @@
 accelerate==1.13.0
 aiohappyeyeballs==2.6.1
+bitsandbytes>=0.41.0
 aiohttp==3.13.5
 aiosignal==1.4.0
 annotated-doc==0.0.4

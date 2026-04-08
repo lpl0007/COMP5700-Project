@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script to clean up zero_shot_outputs.txt by replacing literal '\\n' with actual newlines.
+Script to clean up zero_shot_outputs.txt by replacing literal '\\n' with actual newlines. NOTE: now uneeded but going to keep incase it comes in handy later
 """
 
 def cleanup_output(input_file='zero_shot_outputs.txt', output_file='zero_shot_outputs_cleaned.txt'):

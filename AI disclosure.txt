@@ -1,3 +1,4 @@
 `The author(s) would like to acknowledge the use of Claude Sonnet 4.5, a language model developed by anthropic, in the preparation of this assignment. The Claude Sonnet 4.5 was used in the following way(s) in this assignment: 
 implemented issue #1 input the two documents, 
 implemented issue #2 zero shot prompt function, with manual fixing of the code to work
+told me how to output the model name

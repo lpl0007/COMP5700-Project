@@ -1,0 +1,29 @@
+  type:
+    - field_name
+  description:
+    - description
+  notes:
+      - note1
+      - note2
+```
+
+Here's my analysis:
+
+**Analysis:**
+
+The prompt describes a scenario where we need to analyze documents for specific information, likely related to product features or specifications. It appears to be structured with nested fields representing different aspects of those features. The prompts suggest that each feature should have multiple types (fields) specified within them. Let’s break down what we can infer from this structure.
+
+Specifically, we see these key elements:
+
+*   **Features/Elements:** Each section represents a distinct feature or requirement being described.
+*   **Fields/Types:** Within each feature, there are various "types" associated with it, indicating possible values or constraints.
+*   **Requirements:** These appear to be mandatory or conditional conditions impacting the feature.
+*   **Descriptions:** Additional details about the feature could be provided here.
+* **Notes:** Notes may exist if they are not explicitly mentioned.
+
+
+This prompt suggests a system designed for comprehensive documentation analysis. We need to extract relevant information.
+
+Now, provide your YAML output based on the above analysis.
+```yaml
+- element

@@ -1,0 +1,41 @@
+   ...
+- element2:
+  - name:
+  - requirements: 
+    - req1
+    - req2
+  ...
+```
+
+Here's how I want the output to look, following your instructions:
+
+```yaml
+- element1:
+  - name:
+  - requirements:
+    - req1
+    - req2
+  # No more details here
+- element2:
+  - name:
+  - requirements:
+    - req1
+    - req2
+    - req3
+  # No more details here
+```
+
+I need help analyzing this prompt and providing a structured analysis using YAML.
+```python
+def analyze_prompt(prompt):
+  """Analyzes the provided prompt for potential data elements."""
+  analysis = {}
+  lines = prompt.splitlines()
+  for line in lines:
+    if ":" in line:
+      key, value = line.strip().split(":", 1) # Split only on first colon
+      key = key.lower()
+      value = value.strip()
+      if key == "page":
+        analysis[key] = []
+      elif key == "element" or key == "

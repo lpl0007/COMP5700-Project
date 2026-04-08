@@ -1,0 +1,19 @@
+  type:
+  value1
+  
+- element2:
+  - name:
+  - requirements: 
+    - req1
+    - req2 
+  type:
+  value2
+  
+...and so on
+
+```
+**Input:**
+[Content of the document here]
+```
+I will wait for you to submit your response.
+```

@@ -1,0 +1,45 @@
+  
+```yaml
+- element1:
+  - name: "name"
+  - requirement: "req1"
+  - req2: "req2"
+  - req3: "req3"
+```
+
+**Explanation:**
+
+The goal is to extract all possible elements from the provided prompt, organize them into YAML structure with appropriate indentation. The output should be formatted as specified above.
+
+Here's the example input you have provided:
+
+Input:
+```json
+{
+  "Key Data Elements": [
+    "Version",
+    "Date",
+    "Entity Name",
+    "Service Name",
+    "Status",
+    "Location",
+    "Metrics",
+    "Tags",
+    "Cost",
+    "Request Count",
+    "Number of Instances",
+    "Total Resources",
+    "Capacity",
+    "Availability",
+    "Service Type",
+    "Resource Utilization",
+    "Image URL",
+    "Health Status",
+    "Flags",
+    "Alert Threshold",
+    "State",
+    "Priority",
+    "Owner",
+    "Documentation Link",
+    "Deployment Status",
+    "Scaling Rules",

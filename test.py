@@ -9,9 +9,9 @@ files = [
 ]
 KDEFolder = "KDEs"
 
-for PromptType, Prompts in enumerate(OutputList):
-    print(str(PromptType) + str(Prompts))
-    for item, test in enumerate(Prompts):
+for PromptType, outputs in enumerate(OutputList):
+    print(str(PromptType) + str(outputs))
+    for item, output in enumerate(outputs):
         match PromptType:
             case 0: # zero shot
                 KDEFilePath = "zero"
@@ -19,9 +19,9 @@ for PromptType, Prompts in enumerate(OutputList):
                 KDEFilePath = "few"
             case 2: # chain of thought
                 KDEFilePath = "chain"
-        KDEFilePath = os.path.join(KDEFolder, test.replace(".pdf", "") + " "+ KDEFilePath + " kdes.yaml")
+        KDEFilePath = os.path.join(KDEFolder, files[item].replace(".pdf", "") + " "+ KDEFilePath + " KDEs.yaml")
         with open(KDEFilePath, 'w', encoding='utf-8') as f:
-            f.write(str(test))
+            f.write(str(output))
             f.flush()
 
     

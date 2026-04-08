@@ -1,0 +1,45 @@
+  - description:
+    - desc1
+  - related_to:
+    - relm1
+  - uniqueness:
+    - unique: true
+- element2:
+  - name:
+  - requirements: 
+    - req1
+    - req2
+  - description:
+    - desc2
+  - related_to:
+    - relm2
+  - uniqueness:
+    - unique: false
+- element3:
+  - name:
+  - requirements: 
+    - req1
+    - req2
+  - description:
+    - desc3
+  - related_to:
+    - relm3
+  - uniqueness:
+    - unique: true
+```
+
+Here's my attempt at generating this YAML output using Python code:
+
+```python
+import json
+
+
+def analyse_prompt(prompt):
+  """Analyzes the provided prompt for relevant information."""
+  analysis = {}
+  lines = prompt.split('\n') # Split into lines
+  for line in lines:
+    if ":" in line:
+      key, value = line.strip().split(":", 1)
+      key = key.lower()
+      value

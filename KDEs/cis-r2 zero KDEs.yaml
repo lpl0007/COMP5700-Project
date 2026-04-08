@@ -1,0 +1,35 @@
+*element2:
+  - name:
+  - requirements:
+    - req1
+    - req2
+    - req3 
+*element3:
+  - name:
+  - requirements:
+      - req1
+      - req2
+      - req3
+*element4:
+  - name:
+  - requirements:
+        - req1
+        - req2
+        - req3
+
+**Output:**
+
+```json
+{
+"elements": [
+  {
+    "element_name": "Kubelet",
+    "type": "service_account"
+  },
+  {
+    "element_name": "EKS",
+  }
+]
+}
+```
+```

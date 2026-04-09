@@ -10,7 +10,7 @@ element2:
     req1
     req2 
     req3 
-element3
+element3:
 name: name1
 requirements: 
     req4

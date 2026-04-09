@@ -1,41 +1,47 @@
-   ...
-- element2:
-  - name:
-  - requirements: 
-    - req1
-    - req2
-  ...
-```
-
-Here's how I want the output to look, following your instructions:
+  data_type:
+    description of the type of data that this element represents
+  example:
+    value:
+      - value1
+      - value2
+  dependencies:
+    dependency1
+    dependency2
+  notes:
+    note1
+    note2
 
 ```yaml
-- element1:
-  - name:
-  - requirements:
-    - req1
-    - req2
-  # No more details here
-- element2:
-  - name:
-  - requirements:
-    - req1
-    - req2
-    - req3
-  # No more details here
+element1:
+  name: "Product Name"
+  requirements:
+    req1: "Must be unique"
+    req2: "Should be less than 100"
+  data_type: "String"
+  example:
+    value: - "apple"
+    - "banana"
+  dependencies:
+    dependency1: "Unique Product ID"
+    dependency2: "Existing Product Version"
+  notes:
+    note1: "This is the product name."
+    note2: "It should satisfy these requirements."
 ```
 
-I need help analyzing this prompt and providing a structured analysis using YAML.
 ```python
 def analyze_prompt(prompt):
-  """Analyzes the provided prompt for potential data elements."""
-  analysis = {}
-  lines = prompt.splitlines()
-  for line in lines:
-    if ":" in line:
-      key, value = line.strip().split(":", 1) # Split only on first colon
-      key = key.lower()
-      value = value.strip()
-      if key == "page":
-        analysis[key] = []
-      elif key == "element" or key == "
+    analysis = {}
+    # Placeholder logic for analysis
+    return analysis
+
+print(analyze_prompt("Some Prompt Here"))
+```
+
+**Output:**
+
+```yaml
+element1:
+  name: "Product Name"
+  requirements:
+    req1: "Must be unique

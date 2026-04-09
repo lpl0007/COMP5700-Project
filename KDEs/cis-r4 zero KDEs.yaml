@@ -1,35 +1,26 @@
-  - description: "A unique identifier for the service."
-* **Cluster Name:**
-  - element1:
-    - name:
-    - requirements: 
-      - req1
-      - req2
-    - description: "The name of the Kubernetes cluster."
-* **Namespace(s):**
-  - element1:
-    - name:
-    - requirements: 
-      - req1
-      - req2
-    - description: "The namespace where the service will be deployed."
-* **Deployment Type:**
-  - element1:
-    - name:
-    - requirements: 
-      - req1
-      - req2
-    - description: "The deployment type - e.g., 'Rolling Update', 'Blue/Green'."
-* **Replication Factor:**
-  - element1:
-    - name:
-    - requirements: 
-      - req1
-    - description: "The number of replicas required for the service."
-* **Resource Limits:**
-  - element1:
-    - name:
-    - requirements: 
-      - req1
-    - description: "The resource limits for the service"
-* **Network Policies:**
+  description:
+     description of element 1
+      
+---
+**Analysis:**
+
+The prompt describes a function `generate_heatmap` that creates a heatmap visualization based on input 'data'. It also has two functions, `visualize_distribution`, which generates a KDE plot for each column of the dataframe. These functions have parameters to customize the appearance of these plots using options such as `annot`, `fmt`, `linewidth`, `cmap`, and `hue`. The main block contains a sample dataframe generation process where random integers are generated and assigned to columns of the DataFrame. This ensures reproducibility by setting the seed.
+
+Output:
+```yaml
+element1:
+  name:
+  requirements:
+    req1
+    req2
+    req3
+  description:
+     description of element 1
+      
+---
+**Analysis:**
+
+The analysis focuses on identifying the key data elements present within the prompt. Here's a breakdown:
+
+*   **Function Definitions:** Two Python functions (`generate_heatmap` and `visualize_distribution`) are defined. Both are named clearly.
+*   **Data Handling:** A Pandas DataFrame `data` is created with randomly generated values for numerical columns. This suggests the intention to use real-

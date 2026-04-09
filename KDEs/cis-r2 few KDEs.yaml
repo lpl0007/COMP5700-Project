@@ -1,45 +1,34 @@
-  
-```yaml
-- element1:
-  - name: "name"
-  - requirement: "req1"
-  - req2: "req2"
-  - req3: "req3"
+description:
+  text1
+  text2
+  text3
+ ...
+type:
+  how_to:
+  notes:
+  example:
+---
+For each element found in the prompt, provide detailed information.
 ```
 
-**Explanation:**
+Here's the analysis:
 
-The goal is to extract all possible elements from the provided prompt, organize them into YAML structure with appropriate indentation. The output should be formatted as specified above.
+**Analysis:**
 
-Here's the example input you have provided:
+The prompt describes security control measures related to managing unauthorized services and access rights within an organization. It focuses primarily on automation using tools like host-based Data Loss Prevention (DLP) and Kubernetes Engine Service accounts for enforcing access controls. The core focus appears to be implementing automation based on defined roles and permissions. Specifically, we have these capabilities described:
+*   Uninstall/Disable Unnecessary Services
+*   Enforce Access Control through Automated Tools
+*   Automated Impersonate Permissions
+*   Role-Based Access Policies
 
-Input:
-```json
-{
-  "Key Data Elements": [
-    "Version",
-    "Date",
-    "Entity Name",
-    "Service Name",
-    "Status",
-    "Location",
-    "Metrics",
-    "Tags",
-    "Cost",
-    "Request Count",
-    "Number of Instances",
-    "Total Resources",
-    "Capacity",
-    "Availability",
-    "Service Type",
-    "Resource Utilization",
-    "Image URL",
-    "Health Status",
-    "Flags",
-    "Alert Threshold",
-    "State",
-    "Priority",
-    "Owner",
-    "Documentation Link",
-    "Deployment Status",
-    "Scaling Rules",
+It also mentions "enterprise assets" and "software."  The prompts aim to create automated procedures for managing potentially sensitive data. Security considerations include potential risks associated with unauthorized service usage and improper access control.
+
+---
+Output:
+
+```yaml
+element1:
+  name: Uninstall or Disable Unnecessary Services on Enterprise Assets and Software
+  requirements:
+    req1:  unauthorized service usage prevention
+    req2:

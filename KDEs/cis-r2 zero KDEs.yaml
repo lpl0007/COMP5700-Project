@@ -1,35 +1,42 @@
-*element2:
-  - name:
-  - requirements:
-    - req1
-    - req2
-    - req3 
-*element3:
-  - name:
-  - requirements:
-      - req1
-      - req2
-      - req3
-*element4:
-  - name:
-  - requirements:
-        - req1
-        - req2
-        - req3
+element2:
+  name:
+  requirements: 
+    req1
+    req2
+    req3 
 
-**Output:**
+Here's a sample input prompt:
 
-```json
-{
-"elements": [
-  {
-    "element_name": "Kubelet",
-    "type": "service_account"
-  },
-  {
-    "element_name": "EKS",
-  }
-]
-}
+Input Prompt:
+"Write a function that takes a list of integers as input, and return the sum of all even numbers."
+
+Output YAML:
+```yaml
+element1:
+  name:'sum'
+  requirements:
+    req1: 'even_numbers'
+    req2: 'list'
+element2:
+  name:'sum'
+  requirements:
+    req1: 'even_numbers'
+    req2: 'list'
 ```
-```
+
+Now I want to provide my own prompt with different requirements.
+
+Prompt:
+"Analyze the following text for sentiment analysis using machine learning models. Identify the most frequent emotion (positive, negative, or neutral) and extract the associated words from the text."
+
+---
+**Sentiment Analysis Text:**
+The movie was amazing! It had incredible visuals and fantastic story. But after that, it became frustrating. The actors were poorly trained. This whole experience left me feeling disappointed.
+
+---
+
+Output YAML:
+```yaml
+element1:
+  name:'sentiment'
+  requirements:

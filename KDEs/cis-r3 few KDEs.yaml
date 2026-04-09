@@ -1,19 +1,20 @@
-  type:
-  value1
-  
-- element2:
-  - name:
-  - requirements: 
-    - req1
-    - req2 
-  type:
-  value2
-  
-...and so on
+  data_type: [e.g., string, number, boolean]
+  example:
+  value:
+ ...
+</element>
 
+**Output:**
+```yaml
+element1:
+  name: "Core Structure"
+  requirements:
+    req1: "Data Collection & Analysis"
+    req2: "Statistical Modeling"
+    req3: "Reporting Generation"
+  data_type: "string"
+  example:
+  value: "Data Collection & Analysis"
+</element>
 ```
-**Input:**
-[Content of the document here]
-```
-I will wait for you to submit your response.
 ```

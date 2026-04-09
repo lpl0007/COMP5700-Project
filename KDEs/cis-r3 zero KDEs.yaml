@@ -1,29 +1,56 @@
-  type:
-    - field_name
-  description:
-    - description
-  notes:
-      - note1
-      - note2
+element2:
+  name:
+  requirements: 
+    req1
+    req2 
+    req3 
+element3:
+  name:
+  requirements: 
+    req1
+    req2 
+    req3 
 ```
 
-Here's my analysis:
+Here's how you should approach this problem, using the provided prompt as your guide.
 
-**Analysis:**
+**Example:**
 
-The prompt describes a scenario where we need to analyze documents for specific information, likely related to product features or specifications. It appears to be structured with nested fields representing different aspects of those features. The prompts suggest that each feature should have multiple types (fields) specified within them. Let’s break down what we can infer from this structure.
+Prompt:
+`{
+"type": "string",
+"properties": [
+{"name": "key1"},
+{"name": "value1"}
+]
+}`
 
-Specifically, we see these key elements:
-
-*   **Features/Elements:** Each section represents a distinct feature or requirement being described.
-*   **Fields/Types:** Within each feature, there are various "types" associated with it, indicating possible values or constraints.
-*   **Requirements:** These appear to be mandatory or conditional conditions impacting the feature.
-*   **Descriptions:** Additional details about the feature could be provided here.
-* **Notes:** Notes may exist if they are not explicitly mentioned.
-
-
-This prompt suggests a system designed for comprehensive documentation analysis. We need to extract relevant information.
-
-Now, provide your YAML output based on the above analysis.
+Output:
 ```yaml
-- element
+element1:
+  name: key1
+  requirements:
+    req1:
+      name: value1
+    req2:
+      name: value2
+    req3:
+      name: value3
+```
+```
+
+Now, input the following prompt:
+
+```
+{
+"type": "object",
+"properties": [
+  {"name": "item_id", "type": "integer"},
+  {"name": "product_category", "type": "string"},
+  {"name": "price", "type": "float"}
+}
+}
+```
+
+output:
+```yaml

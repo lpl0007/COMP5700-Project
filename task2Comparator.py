@@ -9,11 +9,12 @@ def readFiles(filePath1:str, filePath2:str):
         data2 = yaml.safe_load(file2)
     return data1, data2
 
-def diffElements(file1:str, file2:str):
+def diffElements(data1, data2):
+    
     raise NotImplementedError
     return -1
 
-def diffRequirements(file1:str, file2:str):
+def diffRequirements(data1, data2):
     raise NotImplementedError
     return -1
 

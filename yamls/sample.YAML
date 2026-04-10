@@ -11,8 +11,8 @@ element2:
     req2 
     req3 
 element3:
-name: name1
-requirements: 
-    req4
-    req5 
-    req6 
+  name: name1
+  requirements: 
+      req4
+      req5 
+      req6 

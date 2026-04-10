@@ -9,12 +9,42 @@ def readFiles(filePath1:str, filePath2:str):
         data2 = yaml.safe_load(file2)
     return data1, data2
 
-def diffElements(data1, data2):
+def compElements(data1, data2):
+    mismatches = []
     
-    raise NotImplementedError
-    return -1
+    for key, value1 in data1.items():
+        if key in data2:
+            value2 = data2[key]
+            # Check if the 'name' field exists in both and differs
+            if isinstance(value1, dict) and isinstance(value2, dict):
+                name1 = value1.get('name')
+                name2 = value2.get('name')
+                if name1 is not None and name2 is not None and name1 != name2:
+                    mismatches.append({
+                        'element': key,
+                        'type': 'both',
+                        'name_data1': name1,
+                        'name_data2': name2
+                    })
+            else:
+                mismatches.append({
+                        'element': key,
+                        'type': 'data1',
+                        'name_data1': name1,
+                    })
+    for key, value2 in data2.items():
+           if key not in data1:
+                if value2.get('name') is not None:
+                    mismatches.append({
+                        'element': key,
+                        'type': 'data2',
+                        'name_data2': value2.get('name'),
+                    })
+    if len(mismatches) == 0:
+        return "NO DIFFERENCES IN REGARDS TO ELEMENT NAMES"
+    return mismatches
 
-def diffRequirements(data1, data2):
+def compRequirements(data1, data2):
     raise NotImplementedError
     return -1
 

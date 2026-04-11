@@ -45,8 +45,25 @@ def compElements(data1, data2):
     return mismatches
 
 def compRequirements(data1, data2):
-    raise NotImplementedError
-    return -1
+    reqs1 = set()
+    reqs2 = set()
+
+    for key, value in data1.items():
+        if isinstance(value, dict) and value.get('requirements'):
+            for req in str(value['requirements']).split():
+                reqs1.add(req.strip())
+
+    for key, value in data2.items():
+        if isinstance(value, dict) and value.get('requirements'):
+            for req in str(value['requirements']).split():
+                reqs2.add(req.strip())
+
+    shared = reqs1 & reqs2
+    different = (reqs1 | reqs2) - shared
+    if len(different) == 0:
+        return 'NO DIFFERENCES IN REGARDS TO ELEMENT REQUIREMENTS'
+
+    return list(different)
 
 if __name__ == "__main__":
     combos = [

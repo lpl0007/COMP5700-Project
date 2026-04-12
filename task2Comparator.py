@@ -83,7 +83,9 @@ def AllFunctions(filePath1:str, filePath2:str):
         outputFile.write(str(difRequirements))
 
 if __name__ == "__main__":
-    data1, data2 = readFiles(sys.argv[1],sys.argv[2])
+    filePath1 = os.path.join("KDEs",sys.argv[1])
+    filePath2 = os.path.join("KDEs",sys.argv[2])
+    data1, data2 = readFiles(filePath1,filePath2)
     diffElements = compElements(data1,data2)
     difRequirements = compRequirements(data1,data2)
     outputFilePath = os.path.join("TXTs",f'{Path(filePath1).stem} {Path(filePath2).stem}.txt' )

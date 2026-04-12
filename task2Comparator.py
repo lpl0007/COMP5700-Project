@@ -87,10 +87,10 @@ if __name__ == "__main__":
     filePath2 = os.path.join("KDEs",sys.argv[2])
     data1, data2 = readFiles(filePath1,filePath2)
     diffElements = compElements(data1,data2)
-    difRequirements = compRequirements(data1,data2)
-    outputFilePath = os.path.join("TXTs",f'{Path(filePath1).stem} {Path(filePath2).stem}.txt' )
-    with open(outputFilePath, 'w', encoding='utf-8') as outputFile:
+    diffRequirements = compRequirements(data1,data2)
+    outputFilePathElement = os.path.join("TXTs",f'{Path(filePath1).stem} {Path(filePath2).stem} elem.txt' )
+    outputFilePathRequirements = os.path.join("TXTs",f'{Path(filePath1).stem} {Path(filePath2).stem} reqs.txt')
+    with open(outputFilePathElement, 'w', encoding='utf-8') as outputFile:
         outputFile.write(str(diffElements))
-        outputFile.write("\n")
-        outputFile.write(str(difRequirements))
-        
+    with open(outputFilePathRequirements, 'w', encoding='utf-8') as outputFile:
+        outputFile.write(str(diffRequirements))

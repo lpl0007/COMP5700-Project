@@ -288,11 +288,11 @@ def chain_of_thought_prompt(doc: str, max_chars: int = 80000) -> str:
 
     return prompt
 
-# Define the nine input combinations
 
 
 
-# Test each combination
+
+
 for i, pdf in enumerate(sys.argv, 0):
     if (i==0):
         continue

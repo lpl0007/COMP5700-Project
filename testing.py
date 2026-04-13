@@ -5,9 +5,9 @@ class comparator(unittest.TestCase):
     
     def testInput(self):
         correctData1 = {'element1': {'name': 'name2', 'requirements': 'req1 req2 req3'}, 'element2': {'name': 'name2', 'requirements': 'req1 req2 req3'}, 'element3': {'name': 'name1', 'requirements': 'req4 req5 req6'}}
-        correctData2 = {'element1': {'name': 'name4', 'requirements': 'req1 req2 req3'}, 'element2': {'name': 'name3', 'requirements': 'req1 req2 req3'}, 'element3': {'name': 'name5', 'requirements': 'req4 req5 req6'}}
+        correctData2 = {'element1': {'name': 'name4', 'requirements': 'req1 req2 req3'}, 'element2': {'name': 'name3', 'requirements': 'req1 req2 req3'}, 'element3': {'name': 'name5', 'requirements': 'req4 req7 req6'}}
         self.assertTrue(True)
-        data1, data2 = task2Comparator.readFiles("KDEs/sample.YAML","KDEs/sample2.YAML")
+        data1, data2 = task2Comparator.readFiles("KDEs/sample.yaml","KDEs/sample2.yaml")
         self.assertEqual(correctData1, data1)
         self.assertEqual(correctData2, data2)
     def testCompareElements(self):

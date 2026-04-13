@@ -102,8 +102,7 @@ def PrintPrompt(prompt, promptType: str, LLMoutput):
         f.flush()  # Ensure data is written immediately
         print(f"print successfull")
 
-import csv
-import os
+
 
 def csvPrompt(filepath: str, row: list[str], header: list[str] = None) -> None:
     """

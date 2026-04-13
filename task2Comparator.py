@@ -83,6 +83,7 @@ def AllFunctions(filePath1:str, filePath2:str):
         outputFile.write(str(difRequirements))
 
 if __name__ == "__main__":
+    print(sys.argv[1])
     filePath1 = os.path.join("KDEs",sys.argv[1])
     filePath2 = os.path.join("KDEs",sys.argv[2])
     data1, data2 = readFiles(filePath1,filePath2)

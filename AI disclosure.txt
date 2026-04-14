@@ -5,3 +5,4 @@ told me how to output the model name
 told me how to parse through a dictionary for task 2, and cleaned up some errors i encountered
 completeed issue #9 and telled me assertCountEqual exists 
 told me more about pathlib features (.name, .stem, and .suffix)
+gave me a starting point for the temp csv

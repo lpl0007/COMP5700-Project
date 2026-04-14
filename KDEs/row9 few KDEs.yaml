@@ -1,0 +1,23 @@
+You are an expert document analyst. Your task is to analyze the prompt given identify key data elements present in it.
+    prompt:
+    **[Provide a short explanation of the difference]**
+   ```
+   Difference:
+   | Category | Description |
+   ---|--- | --- |
+   ```
+    
+       * **Primary Feature:** Describe what the core function of the item is.
+    * **Secondary Feature:** Describe what the secondary function of the item is.
+    * **Unique Feature:** Describe what distinguishes the item from others.
+```
+Let me know the differences!
+
+    Please analyze the prompt given and generate a output in yaml format like so:
+    element1:
+    name:
+    requirements:
+    req1
+    req2
+    req3
+                                                                                                                                                                                                                                                                    

@@ -1,0 +1,34 @@
+You are an expert document analyst. Your task is to analyze the prompt given identify key data elements present in it.
+    prompt:
+    **Note:** I am unable to directly parse the content of these documents here. Instead, I recommend that you copy and paste the text from the respective documents and then follow the suggestions above.
+
+For example, you could organize your findings into sections like:
+
+* **Overall Analysis:** Briefly summarize the overall similarities and differences observed.
+* **Key Data Elements:** List the most common data elements across the documents.
+* **Unique Elements:** Highlight the elements that appear solely in one document.
+* **Significant Differences:** Describe any major discrepancies between the documents.
+
+Let me know if you want me to generate a sample table comparing the two documents. Just paste the text and I will help structure your comparison.
+```python
+def compare_documents(doc1, doc2):
+    analysis = {}
+    # Overall Analysis
+    analysis['overall'] = 'Both Documents contain core concepts regarding Kubernetes security.'
+    analysis['key_elements'] = []
+    analysis['unique_elements'] = []
+    analysis['significant_differences'] = []
+
+    # Key Data Elements
+    analysis['key_elements'].append('Version Numbers')
+    analysis['key_elements'].append('Dates')
+    analysis['key_elements']
+
+    Please analyze the prompt given and generate a output in yaml format like so:
+    element1:
+    name:
+    requirements:
+    req1
+    req2
+    req3
+                                                                                                                                                                                                                                                                    

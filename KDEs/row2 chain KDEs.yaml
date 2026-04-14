@@ -1,0 +1,68 @@
+You are an expert document analyst. Your task is to analyze the prompt given identify key data elements present in it.
+    prompt:
+    - Overall Conclusion:
+```
+- Key Data Elements:
+- Common Elements:
+- Unique Elements:
+- Differences:
+- Overall Conclusion:
+```
+Example Answers:
+---
+
+**Key Data Elements:**
+
+*   Version Number: Specific version of the document.
+*   Author(s): Name(s) of the author(s) of the document.
+*   Date Published: Date the document was originally released.
+*   Assumed Purpose: The stated goal of the document.
+*   Topic: Broad category the document falls under.
+*   Scope: Boundaries of the document.
+
+---
+
+**Common Elements:**
+
+*   Security Standards: NIST Cybersecurity Framework, CISBenchmarks, etc.
+*   Authentication Methods: Mutual TLS, Passwordless Authentication, etc.
+*   Network Models: VPN, Direct Connect, etc.
+*   Monitoring Tools: Prometheus, Grafana, ELK stack, etc.
+*   Automation Levels: Pilot, Production, etc.
+*   Policy Enforcement Mechanisms: Role-Based Access Control, Attribute-Based Security, etc.
+*   Infrastructure Type: On-Premise, Hybrid, Multi-Cloud, etc.
+*   Compliance Requirements: SOC 2, ISO
+
+    Please analyze the prompt given and generate a output in yaml format like so:
+    element1:
+    name:
+    requirements:
+    req1
+    req2
+    req3
+     req4 :
+--
+-----
+-----
+----
+-------
+-----
+-----
+--
+------
+--------
+-----
+-----
+--------
+-----
+-----
+-----
+------
+-----------
+------------
+----------
+----------
+---------------
+-----
+----------
+-------------

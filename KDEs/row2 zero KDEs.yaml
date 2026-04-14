@@ -1,0 +1,47 @@
+You are an expert document analyst. Your task is to analyze the prompt given identify key data elements present in it.
+    prompt:
+    """
+```python */
+import pandas as pd
+from collections import Counter
+import numpy as np
+def analyze_data(df):
+    # Basic statistics
+    print("Basic Statistics:")
+    print(df.describe())
+    return df
+def count_elements(df):
+    # Count occurrences of elements
+    counts = {}
+    for element in df.index:
+        if element in counts:
+            counts[element]+=1
+        else:
+            counts[element]=1
+    print("\nElement Counts:\n", counts)
+    return counts
+def compare_versions(df):
+    # Compare different versions
+    print("Comparing Versions:")
+    # Sort the dataframe by column names
+    df = df.sort_values('column_name')
+    # Print the sorted dataframe
+    print(df.reset_index().tail())
+    return df
+#Example usage
+#Create dummy dataframe
+data = {'Column1': ['A', 'B', 'A'],
+        'Column2': ['X', 'Y', 'Z']}
+df = pd.DataFrame(data)
+analyze_data(df)
+count_elements(df)
+compare
+
+    Please analyze the prompt given and generate a output in yaml format like so:
+    element1:
+    name:
+    requirements:
+    req1
+    req2
+    req3
+                                                                                                                                                                                                                                                                    

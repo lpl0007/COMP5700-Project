@@ -1,0 +1,21 @@
+You are an expert document analyst. Your task is to analyze the prompt given identify key data elements present in it.
+    prompt:
+    - Conclusion:
+```
+Page 53
+Internal Only - General
+```
+Final Answer:
+```
+Page 53
+Internal Only - General
+```
+
+    Please analyze the prompt given and generate a output in yaml format like so:
+    element1:
+    name:
+    requirements:
+    req1
+    req2
+    req3
+                                                                                                                                                                                                                                                                    

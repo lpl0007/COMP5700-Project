@@ -1,0 +1,51 @@
+You are an expert document analyst. Your task is to analyze the prompt given identify key data elements present in it.
+    prompt:
+    (For example:)
+    *Key Data Elements:*
+    * *Common Elements:*
+    * *Unique Elements:*
+    * *Differences:*
+```python
+def generate_structured_report(data):
+    result = {}
+    for element in data:
+        if isinstance(element, str):
+            result[element] = element
+        else:
+            try:
+                result[element] = int(element)
+            except ValueError:
+                print("Could not convert", element, "to integer.")
+    return result
+
+# Example usage
+input_data = ["key1", "key2", "key3"]
+output_report = generate_struct_report(input_data)
+print(output_report)
+```
+
+Explanation:
+
+**1. Key Data Elements:**
+    *   Versions of the core concept.
+    *   Specific characteristics.
+    *   Variations within the broader theme.
+
+**2. Common Elements:**
+    *   Security measures.
+    *   Operational considerations.
+    *   Resource allocation strategies.
+
+**3. Unique Elements:**
+    *   Distinguishing features.
+    *   Rare occurrences.
+    *   Non-
+
+    Please analyze the prompt given and generate a output in yaml format like so:
+    element1:
+    name:
+    requirements:
+    req1
+    req2
+    req3
+                                                                                                                                                                                                                                                                    

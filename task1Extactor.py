@@ -293,46 +293,47 @@ def chain_of_thought_prompt(doc: str, max_chars: int = 80000) -> str:
 
 
 
-for i, pdf in enumerate(sys.argv, 0):
-    if (i==0):
-        continue
-    OutputList = [] #then zero, few, chain of thought
-    #load the doc
-    print(f"\nInput-{i}: {pdf}")
-    doc = read_document(sys.argv[i])
-    print(f"Successfully loaded document {pdf}")
+if __name__ == "__main__":
+    for i, pdf in enumerate(sys.argv, 0):
+        if (i==0):
+            continue
+        OutputList = [] #then zero, few, chain of thought
+        #load the doc
+        print(f"\nInput-{i}: {pdf}")
+        doc = read_document(sys.argv[i])
+        print(f"Successfully loaded document {pdf}")
 
-    #zero shot
-    print(f"running zero shot")
-    prompt = zero_shot_prompt(doc) # DO THIS SEQUENCALLY
-    promptoutput = pipe(prompt)[0]['generated_text'] # make sure to use this! (outputs are actually a dictionary and its silly, but this gets around that)
-    print("prompt generated, saving to LLMoutputs.txt")
-    OutputList.append(promptoutput) # used for KDE
-    
-    torch.cuda.empty_cache() #clean up memory (we may need it!)
-    gc.collect()
+        #zero shot
+        print(f"running zero shot")
+        prompt = zero_shot_prompt(doc) # DO THIS SEQUENCALLY
+        promptoutput = pipe(prompt)[0]['generated_text'] # make sure to use this! (outputs are actually a dictionary and its silly, but this gets around that)
+        print("prompt generated, saving to LLMoutputs.txt")
+        OutputList.append(promptoutput) # used for KDE
+        
+        torch.cuda.empty_cache() #clean up memory (we may need it!)
+        gc.collect()
 
-    #fewshot
-    print(f"running few shot")
-    prompt = few_shot_prompt(doc)
-    promptoutput = pipe(prompt)[0]['generated_text']
-    print("Prompt generated, saving to LLMoutputs.txt")
-    OutputList.append(promptoutput) # used for KDE
-    torch.cuda.empty_cache() #clean up memory (we may need it!)
-    gc.collect()
-    PrintPrompt(prompt, "Few Shot", promptoutput)
+        #fewshot
+        print(f"running few shot")
+        prompt = few_shot_prompt(doc)
+        promptoutput = pipe(prompt)[0]['generated_text']
+        print("Prompt generated, saving to LLMoutputs.txt")
+        OutputList.append(promptoutput) # used for KDE
+        torch.cuda.empty_cache() #clean up memory (we may need it!)
+        gc.collect()
+        PrintPrompt(prompt, "Few Shot", promptoutput)
 
-    # chain of thought
-    print("running chain of thought")
-    prompt = chain_of_thought_prompt(doc)
-    promptoutput = pipe(prompt)[0]['generated_text']
-    print("Prompt generated, saving to LLMoutputs.txt")
-    OutputList.append(promptoutput)
-    torch.cuda.empty_cache()
-    gc.collect()
-    PrintPrompt(prompt, "Chain of Thought", promptoutput)
-    csvPrompt("temp.csv",OutputList,["Z","F","C"])
-print(f"\nAll outputs saved to LLMoutputs.txt")
+        # chain of thought
+        print("running chain of thought")
+        prompt = chain_of_thought_prompt(doc)
+        promptoutput = pipe(prompt)[0]['generated_text']
+        print("Prompt generated, saving to LLMoutputs.txt")
+        OutputList.append(promptoutput)
+        torch.cuda.empty_cache()
+        gc.collect()
+        PrintPrompt(prompt, "Chain of Thought", promptoutput)
+        csvPrompt("temp.csv",OutputList,["Z","F","C"])
+    print(f"\nAll outputs saved to LLMoutputs.txt")
 
 #TODO: change this to be deterministic
 def KDE(prompt: str) -> str:
@@ -366,20 +367,21 @@ def KDE(prompt: str) -> str:
 
     return prompt
 
-KDEFolder = "KDEs"
-input("waiting to cont")
-for PromptType, output in enumerate(OutputList):
-    match PromptType:
-        case 0: # zero shot
-            KDEFilePath = "zero"
-        case 1: # few shot
-            KDEFilePath = "few"
-        case 2: # chain of thought
-            KDEFilePath = "chain"
-    KDEFilePath = os.path.join(KDEFolder, files[item].replace(".pdf", "") + " "+ KDEFilePath + " KDEs.yaml")
-    KDEoutput = pipe(KDE(output))[0]['generated_text']
-    with open(KDEFilePath, 'w', encoding='utf-8') as f:
-        f.write(str(KDEoutput))
-        f.flush()
+if __name__ == "__main__":
+    KDEFolder = "KDEs"
+    input("waiting to cont")
+    for PromptType, output in enumerate(OutputList):
+        match PromptType:
+            case 0: # zero shot
+                KDEFilePath = "zero"
+            case 1: # few shot
+                KDEFilePath = "few"
+            case 2: # chain of thought
+                KDEFilePath = "chain"
+        KDEFilePath = os.path.join(KDEFolder, files[item].replace(".pdf", "") + " "+ KDEFilePath + " KDEs.yaml")
+        KDEoutput = pipe(KDE(output))[0]['generated_text']
+        with open(KDEFilePath, 'w', encoding='utf-8') as f:
+            f.write(str(KDEoutput))
+            f.flush()
 
 # Path.unlink("temp.csv")

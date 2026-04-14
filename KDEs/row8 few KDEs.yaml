@@ -1,0 +1,39 @@
+You are an expert document analyst. Your task is to analyze the prompt given identify key data elements present in it.
+    prompt:
+    **Page 68**
+Internal Only - General 
+| Category | Description |
+|---|---|
+| **Key Data Elements** |  |
+|  |   Instance Type |  |
+|  |  Pod Priority |  |
+|  |  Namespace |  |
+|  | Resource Limits |  |
+|  | Deployment Size |  |
+|  |  Scaling Factor |  |
+| **Common Elements** |  |
+|  |  Monitoring Metrics |  |
+|  |  Alert Conditions |  |
+|  |  Queue Sizes |  |
+|  |  Image Versions |  |
+| **Unique Elements** |  |
+|  |  Cluster State |  |
+|  |  Resource Allocation |  |
+|  | User Permissions |  |
+| **Differences** |  |
+|  | Scaling Patterns |  |
+|  | Health Checks |  |
+|  | Alert Schedules |  |
+
+```
+Remember to replace `[ ]` with the corresponding content. 
+```
+
+    Please analyze the prompt given and generate a output in yaml format like so:
+    element1:
+    name:
+    requirements:
+    req1
+    req2
+    req3
+                                                                                                                                                                                                                                                                    

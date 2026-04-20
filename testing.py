@@ -28,7 +28,6 @@ class comparator(unittest.TestCase):
             #output should look like "element1:name1, name4; element2:name2, name3"
             self.assertCountEqual(dif, task2Comparator.compRequirements(Data1,Data2))
 class exectutor(unittest.TestCase):
-    #TODO: implement the test cases based off what the prof says
     def testInputReadFile(self):
         elements = ["name1","name2","name2","name3","name4","name5"]
         self.assertEqual(elements,task3Exectutor.readFile("TXTs/sample sample2 elem.txt"))

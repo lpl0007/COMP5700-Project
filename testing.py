@@ -1,5 +1,7 @@
 import unittest
 import sys
+import tempfile
+import os
 import task2Comparator
 import task3Exectutor
 class comparator(unittest.TestCase):
@@ -31,6 +33,43 @@ class exectutor(unittest.TestCase):
     def testInputReadFile(self):
         elements = ["name1","name2","name2","name3","name4","name5"]
         self.assertEqual(elements,task3Exectutor.readFile("TXTs/sample sample2 elem.txt"))
+
+    def testDetermineDifferenceControlsNoDifferences(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            elements_path = os.path.join(temp_dir, "elements.txt")
+            requirements_path = os.path.join(temp_dir, "requirements.txt")
+            output_path = os.path.join(temp_dir, "controls.txt")
+
+            with open(elements_path, "w", encoding="utf-8") as f:
+                f.write("NO DIFFERENCES IN REGARDS TO ELEMENT NAMES\n")
+            with open(requirements_path, "w", encoding="utf-8") as f:
+                f.write("NO DIFFERENCES IN REGARDS TO ELEMENT REQUIREMENTS\n")
+
+            result = task3Exectutor.determine_difference_controls(
+                elements_path, requirements_path, output_path
+            )
+            self.assertEqual(["NO DIFFERENCES FOUND"], result)
+            self.assertEqual(["NO DIFFERENCES FOUND"], task3Exectutor.readFile(output_path))
+
+    def testDetermineDifferenceControlsWithDifferences(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            elements_path = os.path.join(temp_dir, "elements.txt")
+            requirements_path = os.path.join(temp_dir, "requirements.txt")
+            output_path = os.path.join(temp_dir, "controls.txt")
+
+            with open(elements_path, "w", encoding="utf-8") as f:
+                f.write("privileged container\n")
+            with open(requirements_path, "w", encoding="utf-8") as f:
+                f.write("service account token\n")
+
+            result = task3Exectutor.determine_difference_controls(
+                elements_path, requirements_path, output_path
+            )
+            self.assertIn("C-0057: Privileged container", result)
+            self.assertIn(
+                "C-0190: Ensure that Service Account Tokens are only mounted where necessary",
+                result,
+            )
 
 if __name__ == '__operations__':
     unittest.operations()

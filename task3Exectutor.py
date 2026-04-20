@@ -1,7 +1,144 @@
 import os
+import sys
+from pathlib import Path
+import subprocess
+
+NO_DIFFERENCES_OUTPUT = "NO DIFFERENCES FOUND"
+
+# Deterministic keyword-to-control mapping for Kubescape controls.
+KEYWORD_CONTROL_MAP = {
+    ("secret", "credential", "password", "token", "apikey", "api_key"): [
+        "C-0012: Applications credentials in configuration files",
+        "C-0186: Minimize access to secrets",
+        "C-0207: Prefer using secrets as files over secrets as environment variables",
+    ],
+    ("privileged", "allowprivilegeescalation", "non-root", "root", "capab"): [
+        "C-0057: Privileged container",
+        "C-0016: Allow privilege escalation",
+        "C-0013: Non-root containers",
+        "C-0200: Minimize the admission of containers with added capabilities",
+    ],
+    ("network", "ingress", "egress", "hostnetwork", "hostport", "port"): [
+        "C-0030: Ingress and Egress blocked",
+        "C-0041: HostNetwork access",
+        "C-0044: Container hostPort",
+        "C-0206: Ensure that all Namespaces have Network Policies defined",
+    ],
+    ("serviceaccount", "service account", "automount", "mount service principal"): [
+        "C-0034: Automatic mapping of service account",
+        "C-0190: Ensure that Service Account Tokens are only mounted where necessary",
+        "C-0261: ServiceAccount token mounted",
+    ],
+    ("resource", "cpu", "memory", "limit", "request"): [
+        "C-0268: Ensure CPU requests are set",
+        "C-0269: Ensure memory requests are set",
+        "C-0270: Ensure CPU limits are set",
+        "C-0271: Ensure memory limits are set",
+    ],
+    ("image", "registry", "latest", "signature"): [
+        "C-0078: Images from allowed registry",
+        "C-0075: Image pull policy on latest tag",
+        "C-0236: Verify image signature",
+    ],
+    ("rbac", "role", "clusterrole", "cluster-admin", "admin"): [
+        "C-0035: Administrative Roles",
+        "C-0185: Ensure that the cluster-admin role is only used where required",
+        "C-0187: Minimize wildcard use in Roles and ClusterRoles",
+    ],
+    ("namespace", "default namespace"): [
+        "C-0212: The default namespace should not be used",
+        "C-0061: Pods in default namespace",
+    ],
+    ("hostpath", "runtime socket", "docker.sock", "containerd.sock", "socket"): [
+        "C-0048: HostPath mount",
+        "C-0074: Container runtime socket mounted",
+        "C-0203: Minimize the admission of HostPath volumes",
+    ],
+}
+
+FALLBACK_CONTROLS = [
+    "C-0211: Apply Security Context to Your Pods and Containers",
+    "C-0186: Minimize access to secrets",
+    "C-0206: Ensure that all Namespaces have Network Policies defined",
+]
+
+
 def readFile(filePath):
     outputLines = []
-    with open(filePath, 'r') as file:
+    with open(filePath, "r", encoding="utf-8") as file:
         for line in file:
             outputLines.append(line.strip())
     return outputLines
+
+
+def _is_no_difference_line(line: str) -> bool:
+    return "NO DIFFERENCES" in line.upper()
+
+
+def _extract_differences(lines: list[str]) -> list[str]:
+    return [line for line in lines if line and not _is_no_difference_line(line)]
+
+
+def _dedupe_keep_order(items: list[str]) -> list[str]:
+    return list(dict.fromkeys(items))
+
+
+def map_differences_to_controls(differences: list[str]) -> list[str]:
+    if not differences:
+        return []
+
+    combined = " ".join(differences).lower()
+    mapped_controls: list[str] = []
+    for keywords, controls in KEYWORD_CONTROL_MAP.items():
+        if any(keyword in combined for keyword in keywords):
+            mapped_controls.extend(controls)
+
+    if not mapped_controls:
+        mapped_controls = FALLBACK_CONTROLS.copy()
+
+    return _dedupe_keep_order(mapped_controls)
+
+
+def determine_difference_controls(
+    elements_txt_path: str, requirements_txt_path: str, output_txt_path: str
+) -> list[str]:
+    element_lines = readFile(elements_txt_path)
+    requirement_lines = readFile(requirements_txt_path)
+    differences = _extract_differences(element_lines) + _extract_differences(requirement_lines)
+
+    if differences:
+        output_lines = map_differences_to_controls(differences)
+    else:
+        output_lines = [NO_DIFFERENCES_OUTPUT]
+
+    with open(output_txt_path, "w", encoding="utf-8") as file:
+        file.write("\n".join(output_lines))
+
+    return output_lines
+
+
+def _resolve_input_path(path_arg: str) -> str:
+    if os.path.isfile(path_arg):
+        return path_arg
+    txt_candidate = os.path.join("TXTs", path_arg)
+    return txt_candidate if os.path.isfile(txt_candidate) else path_arg
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        raise SystemExit(
+            "Usage: python task3Exectutor.py <elements_txt> <requirements_txt> [output_txt]"
+        )
+
+    elements_path = _resolve_input_path(sys.argv[1])
+    requirements_path = _resolve_input_path(sys.argv[2])
+
+    if len(sys.argv) >= 4:
+        output_path = sys.argv[3]
+    else:
+        output_name = f"{Path(elements_path).stem} {Path(requirements_path).stem} controls.txt"
+        output_path = os.path.join("TXTs", output_name)
+
+    determine_difference_controls(elements_path, requirements_path, output_path)
+    # run the kubescape
+    result = subprocess.run(["bash", "kubeScapeRun.sh", kubeScape.txt], capture_output=True, text=True)

@@ -1,0 +1,3 @@
+C-0211: Apply Security Context to Your Pods and Containers
+C-0186: Minimize access to secrets
+C-0206: Ensure that all Namespaces have Network Policies defined

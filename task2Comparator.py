@@ -27,71 +27,69 @@ def compElements(data1, data2):
                 name1 = value1.get('name')
                 name2 = value2.get('name')
                 if name1 is not None and name2 is not None and name1 != name2:
-                    mismatches.append({
-                        'element': key,
-                        'type': 'both',
-                        'name_data1': name1,
-                        'name_data2': name2
-                    })
+                    if (name1 not in mismatches):
+                        mismatches.append(name1)
+                    if (name2 not in mismatches):
+                        mismatches.append(name2)
             else:
-                mismatches.append({
-                        'element': key,
-                        'type': 'data1',
-                        'name_data1': name1,
-                    })
+                mismatches.append(name1)
     for key, value2 in data2.items():
            if key not in data1:
                 if value2.get('name') is not None:
-                    mismatches.append({
-                        'element': key,
-                        'type': 'data2',
-                        'name_data2': value2.get('name'),
-                    })
+                    mismatches.append(value2.get('name'))
     if len(mismatches) == 0:
         return "NO DIFFERENCES IN REGARDS TO ELEMENT NAMES"
+    mismatches.sort()
     return mismatches
 
 def compRequirements(data1, data2):
-    reqs1 = set()
-    reqs2 = set()
+    reqs1 = []
+    reqs2 = []
 
     for key, value in data1.items():
         if isinstance(value, dict) and value.get('requirements'):
             for req in str(value['requirements']).split():
-                reqs1.add(req.strip())
+                if req.strip() not in reqs1:
+                    reqs1.append(req.strip())
 
     for key, value in data2.items():
         if isinstance(value, dict) and value.get('requirements'):
             for req in str(value['requirements']).split():
-                reqs2.add(req.strip())
+                if req.strip() not in reqs2:
+                    reqs2.append(req.strip())
 
-    shared = reqs1 & reqs2
-    different = (reqs1 | reqs2) - shared
+    shared = [r for r in reqs1 if r in reqs2]
+    different = [r for r in reqs1 if r not in reqs2] + [r for r in reqs2 if r not in reqs1]
+
     if len(different) == 0:
         return 'NO DIFFERENCES IN REGARDS TO ELEMENT REQUIREMENTS'
+    different.sort()
+    return different
 
-    return list(different)
-
+def saveList(filePath, inputList):
+    with open(filePath, "w") as file:
+        file.write("\n".join(inputList))
+    
 def AllFunctions(filePath1:str, filePath2:str):
     data1, data2 = readFiles(filePath1,filePath2)
     diffElements = compElements(data1,data2)
     difRequirements = compRequirements(data1,data2)
     outputFilePath = os.path.join("TXTs",f'{Path(filePath1).stem} {Path(filePath2).stem}.txt' )
-    with open(outputFilePath, 'w', encoding='utf-8') as outputFile:
-        outputFile.write(str(diffElements))
-        outputFile.write("\n")
-        outputFile.write(str(difRequirements))
+
+
 
 if __name__ == "__main__":
-    print(sys.argv[1])
+    #get data
     filePath1 = os.path.join("KDEs",sys.argv[1])
     filePath2 = os.path.join("KDEs",sys.argv[2])
+
     data1, data2 = readFiles(filePath1,filePath2)
+    #compare data
     diffElements = compElements(data1,data2)
     diffRequirements = compRequirements(data1,data2)
+    #save output
     outputFilePathElement = os.path.join("TXTs",f'{Path(filePath1).stem} {Path(filePath2).stem} elem.txt' )
     outputFilePathRequirements = os.path.join("TXTs",f'{Path(filePath1).stem} {Path(filePath2).stem} reqs.txt')
-    with open(outputFilePathElement, 'w', encoding='utf-8') as outputFile:
-        outputFile.write(str(diffElements))
-    with open(outputFilePathRequirements, 'w', encoding='utf-8') as outputFile:
-        outputFile.write(str(diffRequirements))
+
+    saveList(outputFilePathElement,diffElements)
+    saveList(outputFilePathRequirements,diffRequirements)

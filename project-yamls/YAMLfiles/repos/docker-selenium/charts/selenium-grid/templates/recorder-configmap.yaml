@@ -1,0 +1,39 @@
+{{- if .Values.videoRecorder.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "seleniumGrid.recorder.configmap.fullname" $ }}
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.recorderConfigMap.annotations }}
+  annotations: {{- toYaml . | nindent 4 }}
+{{- end }}
+  labels:
+    {{- include "seleniumGrid.commonLabels" . | nindent 4 }}
+    {{- with .Values.customLabels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+data:
+  SE_VIDEO_UPLOAD_ENABLED: '{{ .Values.videoRecorder.uploader.enabled }}'
+  SE_VIDEO_FILE_NAME: 'auto'
+{{- if and .Values.videoRecorder.uploader.enabled (empty .Values.videoRecorder.uploader.name) }}
+  SE_VIDEO_INTERNAL_UPLOAD: 'true'
+{{- end }}
+  VIDEO_CONFIG_DIRECTORY: '{{ .Values.recorderConfigMap.extraScriptsDirectory }}'
+  SE_UPLOAD_DESTINATION_PREFIX: '{{ .Values.videoRecorder.uploader.destinationPrefix }}'
+{{- $fileProceeded := list -}}
+{{- range $path, $_ :=  .Files.Glob $.Values.recorderConfigMap.extraScriptsImportFrom }}
+  {{- $fileName := base $path -}}
+  {{- $value := index $.Values.recorderConfigMap.extraScripts $fileName -}}
+  {{- if empty $value }}
+{{- $fileName | nindent 2 -}}: {{- toYaml ($.Files.Get $path) | indent 4 }}
+  {{- else }}
+{{- $fileName | nindent 2 -}}: {{- toYaml $value | indent 4 }}
+  {{- end }}
+  {{- $fileProceeded = append $fileProceeded $fileName -}}
+{{- end }}
+{{- range $fileName, $value := .Values.recorderConfigMap.extraScripts }}
+  {{- if not (has $fileName $fileProceeded) }}
+{{- $fileName | nindent 2 -}}: {{- toYaml (default "" $value) | indent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}

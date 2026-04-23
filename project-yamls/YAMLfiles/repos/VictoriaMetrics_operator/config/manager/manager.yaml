@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vm-operator
+  namespace: monitoring-system
+  labels:
+    control-plane: vm-operator
+spec:
+  selector:
+    matchLabels:
+      control-plane: vm-operator
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        control-plane: vm-operator
+    spec:
+      serviceAccountName: vm-operator
+      containers:
+      - name: manager
+        command:
+        - manager
+        args:
+          - "--enable-leader-election"
+        image: manager
+        env:
+        - name: WATCH_NAMESPACE
+          value: ""
+        resources:
+          limits:
+            cpu: 120m
+            memory: 520Mi
+          requests:
+            cpu: 80m
+            memory: 120Mi
+      terminationGracePeriodSeconds: 10

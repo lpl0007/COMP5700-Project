@@ -1,0 +1,5 @@
+to add it for just a session (for fish):
+fish_add_path /home/viper/.kubescape/bin
+
+to add it perminate (again for fish):
+fish_add_path --permanent /home/viper/.kubescape/bin

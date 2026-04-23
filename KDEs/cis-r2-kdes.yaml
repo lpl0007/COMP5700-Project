@@ -1,0 +1,15 @@
+element1:
+  name: KDE extracted from zero prompt
+  requirements:
+  - Derived from zero prompt output
+  - Manual review recommended
+element2:
+  name: KDE extracted from few prompt
+  requirements:
+  - Derived from few prompt output
+  - Manual review recommended
+element3:
+  name: KDE extracted from chain prompt
+  requirements:
+  - Derived from chain prompt output
+  - Manual review recommended

@@ -5,6 +5,37 @@ import subprocess
 
 NO_DIFFERENCES_OUTPUT = "NO DIFFERENCES FOUND"
 
+import json, csv
+
+def CreateCSV(FilePath):
+    with open(filePath) as f:
+        data = json.load(f)
+
+    summary = data.get('summaryDetails', {}).get('controls', {})
+
+    rows = []
+    for result in data.get('results', []):
+        resource_id = result.get('resourceID', '')
+        for control in result.get('controls', []):
+            control_id = control.get('controlID', '')
+            ctrl_summary = summary.get(control_id, {})
+            counters = ctrl_summary.get('ResourceCounters', {})
+            rows.append({
+                'FilePath': resource_id,
+                'Severity': control.get('severity', ''),
+                'Control Name': control.get('name', ''),
+                'Failed Resources': counters.get('failedResources', ''),
+                'All Resources': counters.get('failedResources', 0) + counters.get('passedResources', 0) + counters.get('excludedResources', 0) + counters.get('skippedResources', 0),
+                'Compliance Score': ctrl_summary.get('complianceScore', ''),
+            })
+
+    with open('results.csv', 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=['FilePath','Severity','Control Name','Failed Resources','All Resources','Compliance Score'])
+        writer.writeheader()
+        writer.writerows(rows)
+
+    print(f'Done — {len(rows)} rows written to {filePath}')
+
 # Deterministic keyword-to-control mapping for Kubescape controls.
 KEYWORD_CONTROL_MAP = {
     ("secret", "credential", "password", "token", "apikey", "api_key"): [
@@ -142,3 +173,5 @@ if __name__ == "__main__":
     determine_difference_controls(elements_path, requirements_path, output_path)
     # run the kubescape
     result = subprocess.run(["bash", "kubeScapeRun.sh", kubeScape.txt], capture_output=True, text=True)
+    #convert to CSV
+    CreateCSV(results.json)

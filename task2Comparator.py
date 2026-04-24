@@ -67,6 +67,10 @@ def compRequirements(data1, data2):
     return different
 
 def saveList(filePath, inputList):
+    if isinstance(inputList, str):
+        with open(filePath, "w") as file:
+            file.write(inputList)
+            return
     with open(filePath, "w") as file:
         file.write("\n".join(inputList))
     
@@ -80,8 +84,8 @@ def AllFunctions(filePath1:str, filePath2:str):
 
 if __name__ == "__main__":
     #get data
-    filePath1 = os.path.join("KDEs",sys.argv[1])
-    filePath2 = os.path.join("KDEs",sys.argv[2])
+    filePath1 = os.path.join("KDEs",sys.argv[1]+"-kdes.yaml")
+    filePath2 = os.path.join("KDEs",sys.argv[2]+"-kdes.yaml")
 
     data1, data2 = readFiles(filePath1,filePath2)
     #compare data

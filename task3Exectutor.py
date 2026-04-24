@@ -8,7 +8,7 @@ NO_DIFFERENCES_OUTPUT = "NO DIFFERENCES FOUND"
 import json, csv
 
 def CreateCSV(FilePath):
-    with open(filePath) as f:
+    with open(FilePath) as f:
         data = json.load(f)
 
     summary = data.get('summaryDetails', {}).get('controls', {})
@@ -34,7 +34,7 @@ def CreateCSV(FilePath):
         writer.writeheader()
         writer.writerows(rows)
 
-    print(f'Done — {len(rows)} rows written to {filePath}')
+    print(f"Done - {len(rows)} rows written to {FilePath}")
 
 # Deterministic keyword-to-control mapping for Kubescape controls.
 KEYWORD_CONTROL_MAP = {
@@ -110,8 +110,25 @@ def _extract_differences(lines: list[str]) -> list[str]:
     return [line for line in lines if line and not _is_no_difference_line(line)]
 
 
+def _contains_no_difference_marker(lines: list[str]) -> bool:
+    return any(_is_no_difference_line(line) for line in lines)
+
+
 def _dedupe_keep_order(items: list[str]) -> list[str]:
     return list(dict.fromkeys(items))
+
+
+def _normalize_non_empty_lines(lines: list[str]) -> list[str]:
+    return [line.strip() for line in lines if line and line.strip()]
+
+
+def _symmetric_line_differences(lines1: list[str], lines2: list[str]) -> list[str]:
+    """Return unique line differences while preserving first-seen order."""
+    set1 = set(lines1)
+    set2 = set(lines2)
+    diff = [line for line in lines1 if line not in set2]
+    diff.extend(line for line in lines2 if line not in set1)
+    return _dedupe_keep_order(diff)
 
 
 def map_differences_to_controls(differences: list[str]) -> list[str]:
@@ -130,14 +147,49 @@ def map_differences_to_controls(differences: list[str]) -> list[str]:
     return _dedupe_keep_order(mapped_controls)
 
 
+def compare_two_text_files_and_map_controls(
+    txt_path_1: str, txt_path_2: str, output_txt_path: str
+) -> list[str]:
+    """Compare two TXT files and write either mapped controls or NO DIFFERENCES FOUND."""
+    lines_1 = _normalize_non_empty_lines(readFile(txt_path_1))
+    lines_2 = _normalize_non_empty_lines(readFile(txt_path_2))
+
+    differences = _symmetric_line_differences(lines_1, lines_2)
+
+    if differences:
+        output_lines = map_differences_to_controls(differences)
+    else:
+        output_lines = [NO_DIFFERENCES_OUTPUT]
+
+    with open(output_txt_path, "w", encoding="utf-8") as file:
+        file.write("\n".join(output_lines))
+
+    return output_lines
+
+
 def determine_difference_controls(
     elements_txt_path: str, requirements_txt_path: str, output_txt_path: str
 ) -> list[str]:
+    """Write Kubescape controls mapped to discovered differences across two TXT reports.
+
+    The two input files are expected to be difference-report files from previous steps:
+    one for element differences and one for requirement differences.
+    """
     element_lines = readFile(elements_txt_path)
     requirement_lines = readFile(requirements_txt_path)
-    differences = _extract_differences(element_lines) + _extract_differences(requirement_lines)
 
-    if differences:
+    element_differences = _extract_differences(element_lines)
+    requirement_differences = _extract_differences(requirement_lines)
+    differences = element_differences + requirement_differences
+
+    # Respect explicit "no differences" markers from the comparator output format.
+    explicit_no_differences = (
+        _contains_no_difference_marker(element_lines)
+        and _contains_no_difference_marker(requirement_lines)
+        and not differences
+    )
+
+    if differences and not explicit_no_differences:
         output_lines = map_differences_to_controls(differences)
     else:
         output_lines = [NO_DIFFERENCES_OUTPUT]
@@ -172,6 +224,6 @@ if __name__ == "__main__":
 
     determine_difference_controls(elements_path, requirements_path, output_path)
     # run the kubescape
-    result = subprocess.run(["bash", "kubeScapeRun.sh", kubeScape.txt], capture_output=True, text=True)
+    result = subprocess.run(["bash", "kubeScapeRun.sh", "kubeScape.txt"], capture_output=True, text=True)
     #convert to CSV
-    CreateCSV(results.json)
+    CreateCSV("results.json")

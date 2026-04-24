@@ -71,5 +71,46 @@ class exectutor(unittest.TestCase):
                 result,
             )
 
+    def testCompareTwoTextFilesAndMapControlsNoDifferences(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            txt_path_1 = os.path.join(temp_dir, "left.txt")
+            txt_path_2 = os.path.join(temp_dir, "right.txt")
+            output_path = os.path.join(temp_dir, "controls.txt")
+
+            with open(txt_path_1, "w", encoding="utf-8") as f:
+                f.write("resource cpu request\n")
+                f.write("service account token\n")
+            with open(txt_path_2, "w", encoding="utf-8") as f:
+                f.write("resource cpu request\n")
+                f.write("service account token\n")
+
+            result = task3Exectutor.compare_two_text_files_and_map_controls(
+                txt_path_1, txt_path_2, output_path
+            )
+
+            self.assertEqual(["NO DIFFERENCES FOUND"], result)
+            self.assertEqual(["NO DIFFERENCES FOUND"], task3Exectutor.readFile(output_path))
+
+    def testCompareTwoTextFilesAndMapControlsWithDifferences(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            txt_path_1 = os.path.join(temp_dir, "left.txt")
+            txt_path_2 = os.path.join(temp_dir, "right.txt")
+            output_path = os.path.join(temp_dir, "controls.txt")
+
+            with open(txt_path_1, "w", encoding="utf-8") as f:
+                f.write("privileged container\n")
+            with open(txt_path_2, "w", encoding="utf-8") as f:
+                f.write("service account token\n")
+
+            result = task3Exectutor.compare_two_text_files_and_map_controls(
+                txt_path_1, txt_path_2, output_path
+            )
+
+            self.assertIn("C-0057: Privileged container", result)
+            self.assertIn(
+                "C-0190: Ensure that Service Account Tokens are only mounted where necessary",
+                result,
+            )
+
 if __name__ == '__operations__':
     unittest.operations()

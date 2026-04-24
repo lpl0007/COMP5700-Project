@@ -209,7 +209,7 @@ def determine_difference_controls(
     )
 
     if differences and not explicit_no_differences:
-        output_lines = [build_kubescape_command(map_differences_to_controls(differences))]
+        output_lines = map_differences_to_controls(differences)
     else:
         output_lines = [NO_DIFFERENCES_OUTPUT]
 
@@ -249,5 +249,11 @@ if __name__ == "__main__":
         print(NO_DIFFERENCES_OUTPUT)
         raise SystemExit(0)
 
-    subprocess.run(["bash", "kubeScapeRun.sh", output_path], check=True, text=True)
+    kubescape_controls = determine_difference_controls(elements_path, requirements_path, output_path)
+    if kubescape_controls == [NO_DIFFERENCES_OUTPUT]:
+        print(NO_DIFFERENCES_OUTPUT)
+        raise SystemExit(0)
+
+    kubescape_command = build_kubescape_command(kubescape_controls)
+    subprocess.run(kubescape_command, shell=True, check=True, text=True)
     CreateCSV(KUBESCAPE_OUTPUT_JSON)

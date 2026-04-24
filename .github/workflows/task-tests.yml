@@ -29,5 +29,5 @@ jobs:
 
       - name: Run test cases
         run: |
-          python -m unittest testing.py -v
-          python -m unittest discover -s . -p "test*.py" -v
+          python -m unittest testing -v
+          python -m unittest discover -s . -p "testing.py" -v

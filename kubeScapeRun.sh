@@ -3,7 +3,7 @@ FILE="$1"
 CONTENT=$(tr -s '[:space:]' ' ' < "$FILE" | sed 's/^ //;s/ $//')
 
 if [[ "$CONTENT" == "NO DIFFERENCES FOUND" ]]; then
-    KubeScape scan
+    echo "NO DIFFERENCES FOUND"
 else
-    sh kubeScape.txt
+    sh "$FILE"
 fi

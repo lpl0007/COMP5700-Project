@@ -1,9 +1,12 @@
 import os
+import re
 import sys
 from pathlib import Path
 import subprocess
 
 NO_DIFFERENCES_OUTPUT = "NO DIFFERENCES FOUND"
+KUBESCAPE_SCAN_TARGET = "project-yamls"
+KUBESCAPE_OUTPUT_JSON = "results.json"
 
 import json, csv
 
@@ -118,6 +121,22 @@ def _dedupe_keep_order(items: list[str]) -> list[str]:
     return list(dict.fromkeys(items))
 
 
+def _control_id(control_label: str) -> str:
+    match = re.match(r"(C-\d{4})", control_label)
+    return match.group(1) if match else control_label
+
+
+def build_kubescape_command(controls: list[str]) -> str:
+    control_ids = _dedupe_keep_order(
+        [_control_id(control) for control in controls if _control_id(control)]
+    )
+    controls_arg = ",".join(control_ids)
+    return (
+        f"kubescape scan {KUBESCAPE_SCAN_TARGET} --format json "
+        f"--output {KUBESCAPE_OUTPUT_JSON} --controls {controls_arg}"
+    )
+
+
 def _normalize_non_empty_lines(lines: list[str]) -> list[str]:
     return [line.strip() for line in lines if line and line.strip()]
 
@@ -170,7 +189,7 @@ def compare_two_text_files_and_map_controls(
 def determine_difference_controls(
     elements_txt_path: str, requirements_txt_path: str, output_txt_path: str
 ) -> list[str]:
-    """Write Kubescape controls mapped to discovered differences across two TXT reports.
+    """Write either a Kubescape scan command or NO DIFFERENCES FOUND.
 
     The two input files are expected to be difference-report files from previous steps:
     one for element differences and one for requirement differences.
@@ -190,7 +209,7 @@ def determine_difference_controls(
     )
 
     if differences and not explicit_no_differences:
-        output_lines = map_differences_to_controls(differences)
+        output_lines = [build_kubescape_command(map_differences_to_controls(differences))]
     else:
         output_lines = [NO_DIFFERENCES_OUTPUT]
 
@@ -223,7 +242,12 @@ if __name__ == "__main__":
         output_path = os.path.join("TXTs", output_name)
 
     determine_difference_controls(elements_path, requirements_path, output_path)
-    # run the kubescape
-    result = subprocess.run(["bash", "kubeScapeRun.sh", "kubeScape.txt"], capture_output=True, text=True)
-    #convert to CSV
-    CreateCSV("results.json")
+    with open(output_path, "r", encoding="utf-8") as file:
+        generated_output = file.read().strip()
+
+    if generated_output == NO_DIFFERENCES_OUTPUT:
+        print(NO_DIFFERENCES_OUTPUT)
+        raise SystemExit(0)
+
+    subprocess.run(["bash", "kubeScapeRun.sh", output_path], check=True, text=True)
+    CreateCSV(KUBESCAPE_OUTPUT_JSON)

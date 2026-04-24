@@ -12,6 +12,7 @@ import sys
 import csv
 import yaml
 import requests
+import re
 
 MAXPDF_LENGTH = 40000
 
@@ -556,37 +557,82 @@ def chain_of_thought_prompt(doc: str, max_chars: int = MAXPDF_LENGTH) -> str:
     return prompt
 
 
-#TODO: change this to be deterministic
 def KDE(prompt: str) -> str:
     """
-    Construct a zero-shot prompt to identify key data elements in two input documents.
+    Deterministically extract KDE-like elements from text and return YAML.
 
     Args:
-        doc1: Text content of the first document
-        doc2: Text content of the second document
-        max_chars: Maximum characters per document to avoid memory issues (default: 2000)
+        prompt: Free-form text to analyze.
 
     Returns:
-        A string containing the zero-shot prompt for the LLM
+        YAML string with keys element1..elementN containing name and requirements.
     """
-    # Truncate documents significantly to avoid OOM errors (kept incase needed later)
-    # doc1_truncated = doc1[:max_chars] + ("..." if len(doc1) > max_chars else "")
-    # doc2_truncated = doc2[:max_chars] + ("..." if len(doc2) > max_chars else "")
+    def _categorize_requirement(requirement: str) -> str:
+        requirement_lower = requirement.lower()
+        categories = [
+            ("Identity and Access", ["auth", "token", "rbac", "permission", "role", "access"]),
+            ("Security Controls", ["security", "encrypt", "tls", "certificate", "secret", "vulnerability"]),
+            ("Version and Compatibility", ["version", "api", "compatib", "upgrade", "deprecated"]),
+            ("Resource Management", ["cpu", "memory", "limit", "request", "quota", "resource"]),
+            ("Networking", ["network", "port", "ingress", "egress", "service", "endpoint"]),
+            ("Operational Requirements", ["monitor", "log", "alert", "backup", "restore", "availability"]),
+        ]
 
-    prompt = f"""You are an expert document analyst. Your task is to analyze the prompt given identify key data elements present in it.
-    prompt:
-    {prompt}
+        for category_name, keywords in categories:
+            if any(keyword in requirement_lower for keyword in keywords):
+                return category_name
 
-    Please analyze the prompt given and generate a output in yaml format like so:
-    element1:
-    name:
-    requirements: 
-    req1
-    req2 
-    req3 
-    """
+        return "General Requirements"
 
-    return prompt
+    lines = [line.strip() for line in prompt.splitlines() if line.strip()]
+    requirement_lines = []
+
+    requirement_pattern = re.compile(
+        r"^(?:[-*]|\d+[.)])\s+|\b(?:shall|must|should|required|requirement|needs to|has to)\b",
+        flags=re.IGNORECASE,
+    )
+
+    for line in lines:
+        if requirement_pattern.search(line):
+            cleaned = re.sub(r"^(?:[-*]|\d+[.)])\s+", "", line).strip()
+            if cleaned:
+                requirement_lines.append(cleaned)
+
+    if not requirement_lines:
+        sentence_candidates = [
+            sentence.strip()
+            for sentence in re.split(r"(?<=[.!?])\s+", prompt)
+            if sentence.strip()
+        ]
+        requirement_lines = sentence_candidates[:6]
+
+    unique_requirements = []
+    seen = set()
+    for requirement in requirement_lines:
+        normalized_requirement = re.sub(r"\s+", " ", requirement).strip()
+        dedupe_key = normalized_requirement.lower()
+        if dedupe_key and dedupe_key not in seen:
+            seen.add(dedupe_key)
+            unique_requirements.append(normalized_requirement)
+
+    grouped_requirements: Dict[str, List[str]] = {}
+    for requirement in unique_requirements:
+        category = _categorize_requirement(requirement)
+        grouped_requirements.setdefault(category, []).append(requirement)
+
+    if not grouped_requirements:
+        grouped_requirements = {
+            "General Requirements": ["No explicit requirements detected. Manual review recommended."]
+        }
+
+    kde_dict: Dict[str, Dict[str, list]] = {}
+    for index, category_name in enumerate(sorted(grouped_requirements.keys()), start=1):
+        kde_dict[f"element{index}"] = {
+            "name": category_name,
+            "requirements": grouped_requirements[category_name],
+        }
+
+    return yaml.safe_dump(kde_dict, sort_keys=False, allow_unicode=False)
 
 
 def _build_final_kde_prompt(document_name: str, prompt_payloads: Dict[str, str]) -> str:

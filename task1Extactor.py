@@ -13,6 +13,8 @@ import csv
 import yaml
 import requests
 
+MAXPDF_LENGTH = 40000
+
 try:
     from huggingface_hub import InferenceClient
 except Exception:
@@ -389,7 +391,7 @@ def csvPrompt(filepath: str, row: list[str], header: list[str] = None) -> None:
         writer.writerow(row)
 
 #prompt functions
-def zero_shot_prompt(doc: str,  max_chars: int = 3000) -> str:
+def zero_shot_prompt(doc: str,  max_chars: int = MAXPDF_LENGTH) -> str:
     """
     Construct a zero-shot prompt to identify key data elements in two input documents.
     
@@ -403,6 +405,7 @@ def zero_shot_prompt(doc: str,  max_chars: int = 3000) -> str:
     """
     # Truncate documents significantly to avoid OOM errors
     doc_truncated = doc[:max_chars] + ("..." if len(doc) > max_chars else "")
+    
     prompt = f"""You are an expert document analyst. Your task is to analyze two documents and identify key data elements present in each.
 
     Document 1:
@@ -418,7 +421,7 @@ def zero_shot_prompt(doc: str,  max_chars: int = 3000) -> str:
         
     return prompt
 
-def few_shot_prompt(doc: str, max_chars: int = 3000) -> str:
+def few_shot_prompt(doc: str, max_chars: int = MAXPDF_LENGTH) -> str:
     """
     Construct a few-shot prompt to identify key data elements in two input documents.
     
@@ -433,7 +436,6 @@ def few_shot_prompt(doc: str, max_chars: int = 3000) -> str:
 
     # Truncate documents to avoid OOM
     doc_truncated = doc[:max_chars] + ("..." if len(doc) > max_chars else "")
-
     # Few-shot examples
     example_1 = """
     Example 1:
@@ -515,7 +517,7 @@ def few_shot_prompt(doc: str, max_chars: int = 3000) -> str:
 
     return prompt
 
-def chain_of_thought_prompt(doc: str, max_chars: int = 3000) -> str:
+def chain_of_thought_prompt(doc: str, max_chars: int = MAXPDF_LENGTH) -> str:
     """
     Construct a chain-of-thought prompt to identify key data elements in a document.
 
@@ -529,6 +531,7 @@ def chain_of_thought_prompt(doc: str, max_chars: int = 3000) -> str:
 
     # Truncate document to avoid OOM
     doc_truncated = doc[:max_chars] + ("..." if len(doc) > max_chars else "")
+
 
     prompt = f"""You are an expert document analyst. Your task is to analyze the document and identify key data elements.
 
@@ -802,7 +805,46 @@ if __name__ == "__main__":
     if len(sys.argv) != 3:
         print("Usage: python task1Extactor.py <requirements_doc_1.pdf> <requirements_doc_2.pdf>")
         sys.exit(1)
+    for i, pdf in enumerate(sys.argv, 0):
+        if (i==0):
+            continue
+        OutputList = [] #then zero, few, chain of thought
+        #load the doc
+        print(f"\nInput-{i}: {pdf}")
+        doc = read_document(sys.argv[i])
+        print(f"Successfully loaded document {pdf}")
 
+        #zero shot
+        print(f"running zero shot")
+        prompt = zero_shot_prompt(doc) # DO THIS SEQUENCALLY
+        promptoutput = pipe(prompt)[0]['generated_text'] # make sure to use this! (outputs are actually a dictionary and its silly, but this gets around that)
+        print("prompt generated, saving to LLMoutputs.txt")
+        OutputList.append(promptoutput) # used for KDE
+        
+        torch.cuda.empty_cache() #clean up memory (we may need it!)
+        gc.collect()
+
+        #fewshot
+        print(f"running few shot")
+        prompt = few_shot_prompt(doc)
+        promptoutput = pipe(prompt)[0]['generated_text']
+        print("Prompt generated, saving to LLMoutputs.txt")
+        OutputList.append(promptoutput) # used for KDE
+        torch.cuda.empty_cache() #clean up memory (we may need it!)
+        gc.collect()
+        PrintPrompt(prompt, "Few Shot", promptoutput)
+
+        # chain of thought
+        print("running chain of thought")
+        prompt = chain_of_thought_prompt(doc)
+        promptoutput = pipe(prompt)[0]['generated_text']
+        print("Prompt generated, saving to LLMoutputs.txt")
+        OutputList.append(promptoutput)
+        torch.cuda.empty_cache()
+        gc.collect()
+        PrintPrompt(prompt, "Chain of Thought", promptoutput)
+        csvPrompt("temp.csv",OutputList,["Z","F","C"])
+    print(f"\nAll outputs saved to LLMoutputs.txt")
     create_kde_yaml_files_for_two_documents(sys.argv[1], sys.argv[2], output_dir="KDEs")
 
 # Path.unlink("temp.csv")

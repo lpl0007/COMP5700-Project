@@ -92,8 +92,8 @@ if __name__ == "__main__":
     diffElements = compElements(data1,data2)
     diffRequirements = compRequirements(data1,data2)
     #save output
-    outputFilePathElement = os.path.join("TXTs",f'{Path(filePath1).stem} {Path(filePath2).stem} elem.txt' )
-    outputFilePathRequirements = os.path.join("TXTs",f'{Path(filePath1).stem} {Path(filePath2).stem} reqs.txt')
+    outputFilePathElement = os.path.join("TXTs",f'{Path(sys.argv[1]).stem} {Path(sys.argv[2]).stem} elem.txt' )
+    outputFilePathRequirements = os.path.join("TXTs",f'{Path(sys.argv[1]).stem} {Path(sys.argv[2]).stem} reqs.txt')
 
     saveList(outputFilePathElement,diffElements)
     saveList(outputFilePathRequirements,diffRequirements)

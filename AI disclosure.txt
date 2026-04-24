@@ -10,3 +10,4 @@ cleaned up compRequirements to use arrays instead
 cleaned up saveList to not have the trailing new line
 explained how to run a text file as a script
 implemented the json to CSV setup for kubescape
+showed me isinstance() for python

@@ -203,7 +203,7 @@ def determine_difference_controls(
 def _resolve_input_path(path_arg: str) -> str:
     if os.path.isfile(path_arg):
         return path_arg
-    txt_candidate = os.path.join("TXTs", path_arg)
+    txt_candidate = os.path.join("TXTs", path_arg+".txt")
     return txt_candidate if os.path.isfile(txt_candidate) else path_arg
 
 
